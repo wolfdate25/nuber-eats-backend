@@ -14,19 +14,23 @@ export class UsersService {
     email,
     password,
     role,
-  }: CreateAccountInput): Promise<string | undefined> {
+  }: CreateAccountInput): Promise<{ ok: boolean; error?: string }> {
     try {
       // check the same account exist
       const exist = await this.users.findOne({ email });
       if (exist) {
         // make error
-        return 'There is a user with that same email already';
+        return {
+          ok: false,
+          error: 'There is a user with that same email already',
+        };
       }
       // create account
       await this.users.save(this.users.create({ email, password, role }));
+      return { ok: true };
     } catch (e) {
       // make error
-      return "Couldn't create account";
+      return { ok: false, error: "Couldn't create account" };
     }
   }
 }
