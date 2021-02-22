@@ -6,9 +6,7 @@ import * as jwt from 'jsonwebtoken';
 export class JwtService {
   constructor(
     @Inject('CONFIG_OPTIONS') private readonly options: JwtModuleOptions,
-  ) {
-    console.log(options);
-  }
+  ) {}
   sign(userId: number): string {
     return jwt.sign({ id: userId }, this.options.secretKey);
   }
