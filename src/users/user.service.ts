@@ -55,7 +55,10 @@ export class UserService {
     // check if password is correct
     // make JWT and give it to user
     try {
-      const user = await this.users.findOne({ email });
+      const user = await this.users.findOne(
+        { email },
+        { select: ['id', 'password'] },
+      );
       if (!user) {
         return {
           ok: false,
@@ -100,5 +103,23 @@ export class UserService {
       user.password = password;
     }
     return this.users.save(user);
+  }
+
+  async verifyEmail(code: string): Promise<boolean> {
+    try {
+      const verification = await this.verifications.findOne(
+        { code },
+        { relations: ['user'] },
+      );
+      if (verification) {
+        verification.user.verified = true;
+        await this.users.save(verification.user);
+      }
+      throw new Error();
+    } catch (e) {
+      console.log(e);
+      return false;
+    }
+    return false;
   }
 }
