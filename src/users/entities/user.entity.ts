@@ -7,7 +7,6 @@ import {
   registerEnumType,
 } from '@nestjs/graphql';
 import * as bcrypt from 'bcrypt';
-import { InternalCoreModule } from '@nestjs/core/injector/internal-core-module';
 import { InternalServerErrorException } from '@nestjs/common';
 import { IsEmail, IsEnum, IsString } from 'class-validator';
 
@@ -35,6 +34,10 @@ export class User extends CoreEntity {
   @Field((type) => UserRole)
   @IsEnum(UserRole)
   role: UserRole;
+
+  @Column({ default: false })
+  @Field((type) => Boolean)
+  verified: boolean;
 
   @BeforeInsert()
   @BeforeUpdate()
